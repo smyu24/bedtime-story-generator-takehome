@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 Before submitting the assignment, describe here in a few sentences what you would have built next if you spent 2 more hours on this project:
 
 If I had 2 more hours, I would add a memory system to track previously generated stories to avoid repetition / build character consistency as well as enable multi-turn dialogue options such as allowing questions or request plot changes mid-story.
-Additionally, having 
+Additionally, I would use agent orchestration protocols and frameworks to help out with state management and scaling.  
 """
 
 logging.basicConfig(
