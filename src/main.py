@@ -172,7 +172,7 @@ class StoryGenerator:
         
         except Exception as e:
             logger.error(f"Judge evaluation failed: {e}")
-            # Return default low scores if parsing fails
+
             return StoryEvaluation(
                 overall_score=5.0,
                 age_appropriateness=5.0,
@@ -216,15 +216,15 @@ class StoryGenerator:
         """Main pipeline: generate, judge, and revise if needed"""
         logger.info(f"Starting story generation for request: {user_input}")
 
-        # Step 1: Categorize
+        # categorize
         category = self.categorize_request(user_input)
         logger.info(f"Categorized as: {category}")
 
-        # Step 2: Generate initial story
+        # generate initial story
         story_text = self.generate_initial_story(user_input, category)
         story = Story(content=story_text, category=category)
 
-        # Step 3: Judge and iteratively improve
+        # Judge and iteratively improve
         for attempt in range(self.max_revision_attempts + 1):
             evaluation = self.judge_story(story.content, user_input)
             story.evaluation = evaluation
