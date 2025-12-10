@@ -1,3 +1,168 @@
 # Prompts Configuration File
 # Version: 1.0.0
 # Last Updated: 2024-12-09
+
+categorization:
+  version: "1.0"
+  system_role: "You are an expert at categorizing children's story requests."
+  user_template: |
+    Analyze this story request and categorize it into ONE of these categories:
+    - adventure: Stories with quests, journeys, exploration
+    - friendship: Stories about relationships, cooperation, social bonds
+    - educational: Stories teaching concepts, morals, or life lessons
+    - fantasy: Stories with magic, imaginary creatures, fantastical worlds
+    - everyday: Stories about daily life, family, school experiences
+    - animal: Stories primarily featuring animal characters
+    - mystery: Stories with puzzles, discoveries, problem-solving
+
+    Request: "{user_input}"
+
+    Respond with ONLY the category name, nothing else.
+  
+  temperature: 0.0
+  max_tokens: 50
+
+generation:
+  version: "1.2"
+  system_role: "You are an award-winning children's book author specializing in bedtime stories."
+  user_template: |
+    Create an engaging bedtime story for ages {age_min}-{age_max}.
+
+    STORY REQUEST: "{user_input}"
+
+    CATEGORY: {category}
+
+    STORY ARC GUIDANCE:
+    {arc_guidance}
+
+    REQUIREMENTS:
+    - Length: {min_words}-{max_words} words (perfect for 5-7 minutes of reading)
+    - Age-appropriate: No scary content, violence, or complex themes
+    - Engaging: Use vivid imagery, sound words, and gentle excitement
+    - Educational: Weave in positive values (kindness, courage, curiosity, friendship)
+    - Structure: Clear beginning, middle, end
+    - Language: Simple but not condescending; some descriptive vocabulary
+    - Ending: Satisfying, warm, and suitable for bedtime (calming tone)
+
+    Write a complete, polished story that follows the arc guidance above.
+  
+  temperature: 0.7
+  max_tokens: 1500
+
+judge:
+  version: "1.1"
+  system_role: "You are an expert children's literature critic and child development specialist with 20 years of experience."
+  user_template: |
+    Evaluate this bedtime story for quality and appropriateness.
+
+    ORIGINAL REQUEST: "{user_request}"
+
+    STORY TO EVALUATE:
+    {story}
+
+    Evaluate on these criteria (score 0-10 for each):
+
+    1. AGE APPROPRIATENESS ({age_min}-{age_max} years):
+       - Language complexity appropriate
+       - No scary/inappropriate content
+       - Concepts understandable
+
+    2. ENGAGEMENT:
+       - Captures attention
+       - Vivid imagery and descriptions
+       - Emotional connection
+
+    3. EDUCATIONAL VALUE:
+       - Positive values/morals
+       - Learning opportunities
+       - Character growth
+
+    4. NARRATIVE QUALITY:
+       - Clear story arc (beginning/middle/end)
+       - Good pacing
+       - Satisfying resolution
+       - Bedtime-appropriate ending (calming)
+
+    5. OVERALL QUALITY
+
+    Respond in this EXACT JSON format:
+    {{
+        "age_appropriateness": <score>,
+        "engagement": <score>,
+        "educational_value": <score>,
+        "narrative_quality": <score>,
+        "overall_score": <score>,
+        "approved": <true/false>,
+        "suggestions": ["suggestion 1", "suggestion 2", "..."]
+    }}
+
+    The story is APPROVED if overall_score >= {approval_threshold_overall} AND all individual scores >= {approval_threshold_individual}
+    Provide 2-4 specific, actionable suggestions for improvement.
+  
+  temperature: 0.2
+  max_tokens: 800
+
+revision:
+  version: "1.0"
+  system_role: "You are an expert children's storyteller specializing in story refinement and improvement."
+  user_template: |
+    Revise this bedtime story based on the feedback below.
+
+    ORIGINAL REQUEST: "{user_request}"
+
+    CURRENT STORY:
+    {story}
+
+    FEEDBACK SCORES:
+    - Age Appropriateness: {age_score}/10
+    - Engagement: {engagement_score}/10
+    - Educational Value: {educational_score}/10
+    - Narrative Quality: {narrative_score}/10
+    - Overall: {overall_score}/10
+
+    SPECIFIC SUGGESTIONS FOR IMPROVEMENT:
+    {suggestions}
+
+    Create an IMPROVED version that addresses the feedback while maintaining what worked well. 
+    Keep the length at {min_words}-{max_words} words.
+  
+  temperature: 0.7
+  max_tokens: 1500
+
+
+story_arcs:
+  adventure: |
+    Setup hero/goal -> Journey begins -> Challenge/obstacle -> Helper/discovery -> Climax/triumph -> Return/celebration
+    Focus: Courage, persistence, discovery
+  
+  friendship: |
+    Introduction of characters -> Friendship forms -> Conflict/misunderstanding -> Reconciliation moment -> Stronger bond
+    Focus: Empathy, communication, loyalty
+  
+  educational: |
+    Present concept/question -> Exploration/experimentation -> Challenge/confusion -> Understanding/insight -> Application/wisdom
+    Focus: Curiosity, learning, growth
+  
+  fantasy: |
+    Ordinary world -> Magic discovered -> Quest/problem -> Use of magic/creativity -> Resolution -> New normal
+    Focus: Imagination, wonder, possibility
+  
+  everyday: |
+    Normal day -> Small problem -> Attempt solutions -> Lesson learned -> Better situation
+    Focus: Relatability, practical wisdom, family
+  
+  animal: |
+    Introduce animal characters -> Situation arises -> Animal teamwork -> Clever solution -> Happy ending
+    Focus: Nature, cooperation, each creature's special traits
+  
+  mystery: |
+    Strange occurrence -> Clues appear -> Investigation -> Red herrings -> Solution revealed -> Explanation
+    Focus: Observation, logic, perseverance
+
+
+#versioning & A/B testing
+metadata:
+  last_updated: "2024-12-09"
+  author: "Seung"
+  notes: |
+    Version 1.0 of judge prompt added more specific evaluation criteria and improved story endings
